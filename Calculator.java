@@ -1,61 +1,75 @@
-// Java program for simple calculator
-import java.io.*;
-import java.lang.*;
-import java.lang.Math;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
-// Driver class
-public class Calculator {
-	// main function
-	public static void main(String[] args)
-	{
-		// Stores two numbers
-		double num1, num2;
+public class Calculator extends JFrame implements ActionListener {
+    JTextField num1Field, num2Field;
+    JComboBox<String> operatorBox;
+    JButton calculateButton;
+    JLabel resultLabel;
 
-		// Take input from the user
-		Scanner sc = new Scanner(System.in);
+    public Calculator() {
+        setTitle("Simple Calculator");
+        setSize(350, 200);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new GridLayout(5, 2, 10, 10));
 
-		System.out.println("Enter the numbers:");
+        // Input fields and labels
+        add(new JLabel("First Number:"));
+        num1Field = new JTextField();
+        add(num1Field);
 
-		// Take the inputs
-		num1 = sc.nextDouble();
-		num2 = sc.nextDouble();
+        add(new JLabel("Operator:"));
+        String[] operators = { "+", "-", "*", "/" };
+        operatorBox = new JComboBox<>(operators);
+        add(operatorBox);
 
-		System.out.println("Enter the operator (+,-,*,/):");
+        add(new JLabel("Second Number:"));
+        num2Field = new JTextField();
+        add(num2Field);
 
-		char op = sc.next().charAt(0);
-		double o = 0;
+        // Calculate button
+        calculateButton = new JButton("Calculate");
+        calculateButton.addActionListener(this);
+        add(calculateButton);
 
-		switch (op) {
-		// case to add two numbers
-		case '+':
-			o = num1 + num2;
-			break;
+        // Result label
+        resultLabel = new JLabel("Result: ");
+        add(resultLabel);
 
-		// case to subtract two numbers
-		case '-':
-			o = num1 - num2;
-			break;
+        setVisible(true);
+    }
 
-		// case to multiply two numbers
-		case '*':
-			o = num1 * num2;
-			break;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            double num1 = Double.parseDouble(num1Field.getText());
+            double num2 = Double.parseDouble(num2Field.getText());
+            String operator = (String) operatorBox.getSelectedItem();
+            double result = 0;
 
-		// case to divide two numbers
-		case '/':
-			o = num1 / num2;
-			break;
+            switch (operator) {
+                case "+": result = num1 + num2; break;
+                case "-": result = num1 - num2; break;
+                case "*": result = num1 * num2; break;
+                case "/":
+                    if (num2 == 0) {
+                        resultLabel.setText("Error: Division by zero");
+                        return;
+                    } else {
+                        result = num1 / num2;
+                    }
+                    break;
+            }
 
-		default:
-			System.out.println("You enter wrong input");
-		}
+            resultLabel.setText("Result: " + result);
 
-		System.out.println("The final result:");
-		System.out.println();
+        } catch (NumberFormatException ex) {
+            resultLabel.setText("Invalid number input.");
+        }
+    }
 
-		// print the final result
-		System.out.println(num1 + " " + op + " " + num2
-						+ " = " + o);
-	}
+    public static void main(String[] args) {
+        new Calculator();
+    }
 }
