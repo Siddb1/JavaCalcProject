@@ -1,5 +1,17 @@
-FROM openjdk:11
-WORKDIR /user/scr/app
-COPY . .
+# Use a full JDK image
+FROM openjdk:17
+
+# Set the working directory
+WORKDIR /app
+
+# Copy Java file
+COPY Calculator.java .
+
+# Compile it
 RUN javac Calculator.java
-CMD ["java","Calculator"]
+
+# Set the DISPLAY environment variable (this will be overridden at runtime)
+ENV DISPLAY=:0
+
+# Run GUI app
+CMD ["java", "Calculator"]
